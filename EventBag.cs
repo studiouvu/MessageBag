@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Studiouvu.Core.MessageBag.Message;
-namespace Studiouvu.Core.MessageBag
+using Studiouvu.Core.EventBag.Event;
+namespace Studiouvu.Core.EventBag
 {
-    public class MessageBag<T> : IMessageBag where T : IMessage
+    public class EventBag<T> : IEventBag where T : IEvent
     {
-        private readonly Dictionary<MessageBagToken, Action<T>> _events = new();
+        private readonly Dictionary<EventBagToken, Action<T>> _events = new();
 
-        public MessageBagToken AddEvent(MessageBagToken token, Action<T> action)
+        public EventBagToken AddEvent(EventBagToken token, Action<T> action)
         {
             if (!_events.TryAdd(token, action))
                 _events[token] += action;
@@ -16,7 +16,7 @@ namespace Studiouvu.Core.MessageBag
             return token;
         }
 
-        public void Release(MessageBagToken token)
+        public void Release(EventBagToken token)
         {
             _events.Remove(token);
         }

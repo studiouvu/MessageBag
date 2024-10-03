@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-namespace Studiouvu.Core.MessageBag
+namespace Studiouvu.Core.EventBag
 {
-    public class MessageBagToken
+    public class EventBagToken
     {
-        public readonly LinkedList<IMessageBag> registeredList = new();
+        public readonly LinkedList<IEventBag> registeredList = new();
 
-        ~MessageBagToken()
+        ~EventBagToken()
         {
             if (registeredList.Count != 0 && Application.isPlaying)
-                Debug.LogError($"[EventBagToken] 해제되지 않은 이벤트가 있습니다");
+                Debug.LogWarning($"[EventBagToken] 해제되지 않은 이벤트가 있습니다");
         }
         
         public void Release()
