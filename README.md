@@ -1,1 +1,1 @@
-# MessageBag
+# EventBag
