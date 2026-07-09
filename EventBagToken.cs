@@ -1,21 +1,33 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 namespace Studiouvu.Core.EventBag
 {
     public class EventBagToken
     {
-        public readonly LinkedList<IEventBag> registeredList = new();
+        private readonly HashSet<IEventBag> _registeredList = new();
 
-        ~EventBagToken()
+        public void Register(IEventBag eventBag)
         {
-            if (registeredList.Count != 0 && Application.isPlaying)
-                Debug.LogWarning($"[EventBagToken] 해제되지 않은 이벤트가 있습니다");
+            if (eventBag == null)
+                throw new ArgumentNullException(nameof(eventBag), "EventBag cannot be null");
+
+            _registeredList.Add(eventBag);
         }
-        
+
         public void Release()
         {
-            foreach (var eventBag in registeredList)
+            foreach (var eventBag in _registeredList)
                 eventBag.Release(this);
+
+            _registeredList.Clear();
+        }
+
+        public void Release(IEventBag eventBag)
+        {
+            if (eventBag == null)
+                throw new ArgumentNullException(nameof(eventBag), "EventBag cannot be null");
+            _registeredList.Remove(eventBag);
+            eventBag.Release(this);
         }
     }
 }
